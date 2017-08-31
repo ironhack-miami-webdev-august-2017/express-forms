@@ -1,5 +1,6 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const bodyParser = require('body-parser');
 
 
 const app = express();
@@ -11,6 +12,9 @@ app.set('layout', 'my-master-layout.ejs');
 
 app.use(expressLayouts);
 app.use(express.static('public'));
+
+// creates "req.body" for our POST routes
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
@@ -51,6 +55,28 @@ app.get('/search-results', (req, res, next) => {
 });
 
 
+
+// STEP #1: Display Form
+app.get('/login', (req, res, next) => {
+    res.render('login-form.ejs');
+});
+
+// STEP #2: Receive Submission
+app.post('/checklogin', (req, res, next) => {
+    console.log('FORM BODY INFO ***********************');
+    console.log( req.body );
+    // "req.body" is created by the "body-parser" npm package
+
+    // If the submitted email and password are CORRECT, display the welcome page.
+    if (req.body.emailValue === 'a@a.a' && req.body.passwordValue === 'aaaa') {
+        res.render('welcome.ejs');
+    }
+
+    // If the email and password are NOT correct, display the go away page.
+    else {
+        res.render('go-away.ejs');
+    }
+});
 
 // ROUTES ☝︎☝︎☝︎-----------------------------------------------------------------
 
